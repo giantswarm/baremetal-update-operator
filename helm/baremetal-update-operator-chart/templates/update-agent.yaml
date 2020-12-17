@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: container-linux-update-agent
@@ -8,11 +8,15 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: container-linux-update-agent
   template:
     metadata:
       labels:
         app: container-linux-update-agent
     spec:
+      serviceAccountName: "reboot-coordinator"
       containers:
       - name: update-agent
         image: quay.io/coreos/container-linux-update-operator:v0.4.1
